@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Router, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
@@ -29,6 +29,23 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
   /**************************************************************************** */
 
+  app.get("/filteredimage/", ( req: Request, res: Response) => {
+    let {image_url} = req.query;
+    if(image_url){
+      filterImageFromURL(image_url)
+      .then(filteredpath => res.status(200).sendFile(filteredpath,(err)=>{
+        if(!err){
+          let path=[];
+          path[path.length]=filteredpath;
+          deleteLocalFiles(path);
+        }
+      }))
+      ;
+
+      
+    }
+
+  })
   //! END @TODO1
   
   // Root Endpoint
