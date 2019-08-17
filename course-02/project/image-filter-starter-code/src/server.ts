@@ -34,15 +34,19 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
     if(image_url){
       filterImageFromURL(image_url)
       .then(filteredpath => res.status(200).sendFile(filteredpath,(err)=>{
-        if(!err){
+        if(err){
+          res.status(422).send("File processing failed");
+        }
+        else{
           let path=[];
           path[path.length]=filteredpath;
           deleteLocalFiles(path);
         }
       }))
-      ;
-
-      
+      ;    
+    }
+    else{
+      return res.status(400).send("Missing valid image url");
     }
 
   })
